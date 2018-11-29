@@ -221,7 +221,7 @@ open class PagingContentViewController: UIViewController {
     }
     
     /// Return scrollView that the content view controller uses to show the contents.
-    public let scrollView: UIScrollView = {
+    open let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isPagingEnabled = true
         scrollView.showsVerticalScrollIndicator = false
@@ -248,16 +248,11 @@ open class PagingContentViewController: UIViewController {
         if #available(iOS 11.0, *) {
             scrollView.contentInsetAdjustmentBehavior = .never
         }
-        scrollView.delegate = self
-        view.backgroundColor = .clear
-        view.addSubview(scrollView)
-        self.setUpConstraints()
-
-    }
-
-    open func setUpConstraints() {
         scrollView.frame = view.bounds
+        scrollView.delegate = self
+        view.addSubview(scrollView)
         view.addConstraints([.top, .bottom, .leading, .trailing].anchor(from: scrollView, to: view))
+        view.backgroundColor = .clear
     }
 
     override open func viewDidLayoutSubviews() {
@@ -266,9 +261,7 @@ open class PagingContentViewController: UIViewController {
             width: scrollView.bounds.size.width * CGFloat(numberOfPages),
             height: scrollView.bounds.size.height
         )
-        
         scrollView.contentOffset = CGPoint(x: scrollView.bounds.width * CGFloat(leftSidePageIndex), y: 0)
-        
         cachedViewControllers.enumerated().forEach { (offset, vc) in
             vc?.view.frame = scrollView.bounds
             vc?.view.frame.origin.x = scrollView.bounds.width * CGFloat(offset)
